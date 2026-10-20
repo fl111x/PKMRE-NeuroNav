@@ -68,110 +68,29 @@
           <span>Program Kreativitas Mahasiswa Riset Eksakta (PKM-RE) 2026</span>
         </div>
         <h1 class="hero-headline">
-          Menavigasi Masa Depan Kursi Roda dengan <span class="gradient-text">Kekuatan Pikiran & Fokus</span>
+          Neuro Navigation
         </h1>
         <p class="hero-subheadline">
-          Inovasi integrasi arsitektur <strong>DWT-MSCNN-ViT</strong> untuk klasifikasi simultan <em>Motor Imagery</em> dan tingkat fokus pengguna berbasis sinyal EEG 14-kanal secara <em>real-time</em> bagi penyandang disabilitas motorik.
+          Klasifikasi Imajinasi Gerak dan Fokus Pada Sinyal Elektroensefalogram Menggunakan Metode Multi-Scale Convolution Neural Network dan Vision Transformer
         </p>
-        <div class="hero-actions">
-          <a href="#interactive-demo" class="btn btn-primary">
-            <i class="fa-solid fa-gamepad"></i>
-            <span>Coba Simulasi BCI</span>
-          </a>
-          <a href="#architecture" class="btn btn-secondary">
-            <i class="fa-solid fa-microchip"></i>
-            <span>Jelajahi Arsitektur</span>
-          </a>
-          <a href="#outputs" class="btn btn-ghost">
-            <i class="fa-solid fa-certificate"></i>
-            <span>Hak Cipta & Jurnal</span>
-          </a>
-        </div>
 
         <!-- Quick Highlights -->
-        <div class="hero-metrics">
-          <div class="metric-item">
-            <div class="metric-val">90%</div>
-            <div class="metric-label">Akurasi Uji Offline</div>
-          </div>
-          <div class="metric-item">
-            <div class="metric-val">85%</div>
-            <div class="metric-label">Akurasi Real-Time</div>
-          </div>
-          <div class="metric-item">
-            <div class="metric-val">0.4s</div>
-            <div class="metric-label">Latensi Respon</div>
-          </div>
+        <div class="hero-metrics hero-metrics-single">
           <div class="metric-item">
             <div class="metric-val">4.6 Juta</div>
-            <div class="metric-label">Disabilitas Motorik di RI</div>
+            <div class="metric-label">Penyandang Disabilitas Motorik di Indonesia</div>
           </div>
         </div>
       </div>
 
       <div class="hero-visual">
-        <div class="bci-card-wrapper">
-          <div class="bci-glass-card">
-            <div class="card-header-bar">
-              <span class="status-indicator live"></span>
-              <span class="terminal-title">EMOTIV EPOC+ 14-CHANNEL STREAM</span>
-              <span class="signal-quality"><i class="fa-solid fa-wifi"></i> 98% Good</span>
-            </div>
-            
-            <!-- Animated EEG Visualizer -->
-            <div class="eeg-waves-container" id="eegVisualizer">
-              <div class="channel-row">
-                <span class="ch-name">AF3 (Mu/Beta)</span>
-                <canvas class="wave-canvas" data-wave="mu" height="28"></canvas>
-              </div>
-              <div class="channel-row">
-                <span class="ch-name">F3 (Beta/Gamma)</span>
-                <canvas class="wave-canvas" data-wave="beta" height="28"></canvas>
-              </div>
-              <div class="channel-row">
-                <span class="ch-name">O1 (Alfa/Fokus)</span>
-                <canvas class="wave-canvas" data-wave="alpha" height="28"></canvas>
-              </div>
-              <div class="channel-row">
-                <span class="ch-name">T7 (Motor Imagery)</span>
-                <canvas class="wave-canvas" data-wave="theta" height="28"></canvas>
-              </div>
-            </div>
-
-            <!-- Pipeline Live status tracker -->
-            <div class="pipeline-pill-preview">
-              <div class="pipe-node active">
-                <span class="p-num">1</span>
-                <span>DWT Filter</span>
-              </div>
-              <div class="pipe-arrow"><i class="fa-solid fa-angle-right"></i></div>
-              <div class="pipe-node active">
-                <span class="p-num">2</span>
-                <span>MSCNN (16/32/64)</span>
-              </div>
-              <div class="pipe-arrow"><i class="fa-solid fa-angle-right"></i></div>
-              <div class="pipe-node active">
-                <span class="p-num">3</span>
-                <span>ViT Self-Attention</span>
-              </div>
-            </div>
-
-            <!-- Predicted Class Banner -->
-            <div class="live-prediction-banner">
-              <div class="pred-label-group">
-                <span class="pred-tag">PREDIKSI STATUS AKTIF:</span>
-                <div class="pred-value" id="heroLivePrediction">
-                  <span class="badge-fokus focus-yes"><i class="fa-solid fa-bullseye"></i> FOKUS (Tinggi)</span>
-                  <span class="badge-gerak"><i class="fa-solid fa-arrow-up"></i> MAJU (Forward)</span>
-                </div>
-              </div>
-              <div class="pred-speed-tag">
-                <span class="speed-val">0.4 Detik</span>
-                <span class="speed-sub">Inference Time</span>
-              </div>
+        <div class="hero-photo-wrapper">
+          <div class="hero-photo-card glass-card">
+            <img src="aset/Hero aset.jpeg" alt="Penelitian Tim NeuroNav" class="hero-photo-img">
+            <div class="hero-photo-overlay">
+              <span class="photo-caption-badge"><i class="fa-solid fa-brain"></i> Riset BCI & Kursi Roda Cerdas UNJANI</span>
             </div>
           </div>
-          <!-- Decorative tech frames -->
           <div class="glow-backdrop"></div>
         </div>
       </div>

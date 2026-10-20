@@ -473,6 +473,11 @@ ul {
   border-top: 1px solid var(--border-glass);
 }
 
+.hero-metrics.hero-metrics-single {
+  grid-template-columns: 1fr;
+  max-width: 480px;
+}
+
 .metric-val {
   font-size: 1.85rem;
   font-weight: 800;
@@ -488,9 +493,52 @@ ul {
   margin-top: 2px;
 }
 
-/* Hero Visual: Live EEG Stream Card (Crisp Lab White) */
-.bci-card-wrapper {
+/* Hero Visual: Research Photo Frame */
+.hero-photo-wrapper {
   position: relative;
+}
+
+.hero-photo-card {
+  position: relative;
+  overflow: hidden;
+  padding: 10px;
+  background: #ffffff;
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 45px -10px rgba(14, 165, 233, 0.2), 0 8px 20px -4px rgba(15, 23, 42, 0.08);
+}
+
+.hero-photo-img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  border-radius: calc(var(--radius-lg) - 6px);
+  display: block;
+}
+
+.hero-photo-overlay {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.photo-caption-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(2, 132, 199, 0.3);
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
 .bci-glass-card {

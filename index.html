@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroNav - Brain-Computer Interface Wheelchair Navigation</title>
+  <meta name="description" content="Penelitian PKM-RE Tim NeuroNav: Model Komputasi DWT-MSCNN-ViT untuk Klasifikasi Multivariabel Imajinasi Gerak & Tingkat Fokus Berbasis EEG pada Kendali Kursi Roda Disabilitas Motorik.">
+  <meta name="keywords" content="NeuroNav, Brain Computer Interface, BCI, EEG, DWT, MSCNN, Vision Transformer, Kursi Roda Cerdas, PKM-RE, UNJANI">
+  <meta property="og:title" content="NeuroNav (Neuro Navigation) - BCI Wheelchair Research">
+  <meta property="og:description" content="Klasifikasi simultan 4 kelas gerakan dan 2 tingkat fokus dengan akurasi 90% (offline) & 85% (real-time, 0.4s).">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Glow Background -->
+  <div class="bg-glow-container" aria-hidden="true">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+    <div class="glow-orb orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand-logo">
+        <div class="logo-icon">
+          <i class="fa-solid fa-brain"></i>
+        </div>
+        <div class="brand-text">
+          <span class="brand-title">NeuroNav</span>
+          <span class="brand-sub">PKM-RE UNJANI</span>
+        </div>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a href="#about" class="nav-item">Latar Belakang</a>
+        <a href="#architecture" class="nav-item">Arsitektur AI</a>
+        <a href="#results" class="nav-item">Hasil & Kinerja</a>
+        <a href="#interactive-demo" class="nav-item">Simulasi BCI</a>
+        <a href="#outputs" class="nav-item">Luaran Riset</a>
+        <a href="#team" class="nav-item">Tim Riset</a>
+        <a href="https://www.instagram.com/pkmre.neuronav" target="_blank" rel="noopener" class="nav-btn-ig">
+          <i class="fa-brands fa-instagram"></i>
+          <span>@pkmre.neuronav</span>
+        </a>
+      </div>
+
+      <button class="mobile-toggle" id="mobileMenuBtn" aria-label="Toggle navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-section">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          <span>Program Kreativitas Mahasiswa Riset Eksakta (PKM-RE) 2026</span>
+        </div>
+        <h1 class="hero-headline">
+          Menavigasi Masa Depan Kursi Roda dengan <span class="gradient-text">Kekuatan Pikiran & Fokus</span>
+        </h1>
+        <p class="hero-subheadline">
+          Inovasi integrasi arsitektur <strong>DWT-MSCNN-ViT</strong> untuk klasifikasi simultan <em>Motor Imagery</em> dan tingkat fokus pengguna berbasis sinyal EEG 14-kanal secara <em>real-time</em> bagi penyandang disabilitas motorik.
+        </p>
+        <div class="hero-actions">
+          <a href="#interactive-demo" class="btn btn-primary">
+            <i class="fa-solid fa-gamepad"></i>
+            <span>Coba Simulasi BCI</span>
+          </a>
+          <a href="#architecture" class="btn btn-secondary">
+            <i class="fa-solid fa-microchip"></i>
+            <span>Jelajahi Arsitektur</span>
+          </a>
+          <a href="#outputs" class="btn btn-ghost">
+            <i class="fa-solid fa-certificate"></i>
+            <span>Hak Cipta & Jurnal</span>
+          </a>
+        </div>
+
+        <!-- Quick Highlights -->
+        <div class="hero-metrics">
+          <div class="metric-item">
+            <div class="metric-val">90%</div>
+            <div class="metric-label">Akurasi Uji Offline</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-val">85%</div>
+            <div class="metric-label">Akurasi Real-Time</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-val">0.4s</div>
+            <div class="metric-label">Latensi Respon</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-val">4.6 Juta</div>
+            <div class="metric-label">Disabilitas Motorik di RI</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="bci-card-wrapper">
+          <div class="bci-glass-card">
+            <div class="card-header-bar">
+              <span class="status-indicator live"></span>
+              <span class="terminal-title">EMOTIV EPOC+ 14-CHANNEL STREAM</span>
+              <span class="signal-quality"><i class="fa-solid fa-wifi"></i> 98% Good</span>
+            </div>
+            
+            <!-- Animated EEG Visualizer -->
+            <div class="eeg-waves-container" id="eegVisualizer">
+              <div class="channel-row">
+                <span class="ch-name">AF3 (Mu/Beta)</span>
+                <canvas class="wave-canvas" data-wave="mu" height="28"></canvas>
+              </div>
+              <div class="channel-row">
+                <span class="ch-name">F3 (Beta/Gamma)</span>
+                <canvas class="wave-canvas" data-wave="beta" height="28"></canvas>
+              </div>
+              <div class="channel-row">
+                <span class="ch-name">O1 (Alfa/Fokus)</span>
+                <canvas class="wave-canvas" data-wave="alpha" height="28"></canvas>
+              </div>
+              <div class="channel-row">
+                <span class="ch-name">T7 (Motor Imagery)</span>
+                <canvas class="wave-canvas" data-wave="theta" height="28"></canvas>
+              </div>
+            </div>
+
+            <!-- Pipeline Live status tracker -->
+            <div class="pipeline-pill-preview">
+              <div class="pipe-node active">
+                <span class="p-num">1</span>
+                <span>DWT Filter</span>
+              </div>
+              <div class="pipe-arrow"><i class="fa-solid fa-angle-right"></i></div>
+              <div class="pipe-node active">
+                <span class="p-num">2</span>
+                <span>MSCNN (16/32/64)</span>
+              </div>
+              <div class="pipe-arrow"><i class="fa-solid fa-angle-right"></i></div>
+              <div class="pipe-node active">
+                <span class="p-num">3</span>
+                <span>ViT Self-Attention</span>
+              </div>
+            </div>
+
+            <!-- Predicted Class Banner -->
+            <div class="live-prediction-banner">
+              <div class="pred-label-group">
+                <span class="pred-tag">PREDIKSI STATUS AKTIF:</span>
+                <div class="pred-value" id="heroLivePrediction">
+                  <span class="badge-fokus focus-yes"><i class="fa-solid fa-bullseye"></i> FOKUS (Tinggi)</span>
+                  <span class="badge-gerak"><i class="fa-solid fa-arrow-up"></i> MAJU (Forward)</span>
+                </div>
+              </div>
+              <div class="pred-speed-tag">
+                <span class="speed-val">0.4 Detik</span>
+                <span class="speed-sub">Inference Time</span>
+              </div>
+            </div>
+          </div>
+          <!-- Decorative tech frames -->
+          <div class="glow-backdrop"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Problem & Context Section -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-header text-center">
+        <div class="section-tag">Urgensi & Latar Belakang</div>
+        <h2 class="section-title">Tantangan Disabilitas Motorik & Keamanan Kendali BCI</h2>
+        <p class="section-desc">
+          Berdasarkan data nasional, lebih dari 4,6 juta jiwa di Indonesia mengalami disabilitas motorik akibat stroke, cedera saraf tulang belakang, dan ALS.
+        </p>
+      </div>
+
+      <div class="cards-grid-3">
+        <div class="glass-card problem-card">
+          <div class="icon-bubble red">
+            <i class="fa-solid fa-wheelchair"></i>
+          </div>
+          <h3>Keterbatasan Motorik Tangan</h3>
+          <p>
+            Penyandang kelumpuhan motorik berat tidak dapat mengoperasikan joystick atau tuas fisik kursi roda elektrik konvensional.
+          </p>
+          <div class="card-footer-stat">
+            <span class="stat-num">4.6 Juta</span>
+            <span class="stat-desc">Jiwa penyandang disabilitas di Indonesia</span>
+          </div>
+        </div>
+
+        <div class="glass-card problem-card">
+          <div class="icon-bubble amber">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <h3>Ancaman Defisit Tingkat Fokus</h3>
+          <p>
+            Sebagian besar riset BCI hanya mendeteksi arah imajinasi gerak tanpa memperhitungkan apakah pengguna sedang fokus atau terdistraksi, yang berisiko fatal memicu tabrakan kursi roda.
+          </p>
+          <div class="card-footer-stat">
+            <span class="stat-num">Dual-Gating</span>
+            <span class="stat-desc">Wajib memverifikasi tingkat fokus demi keselamatan</span>
+          </div>
+        </div>
+
+        <div class="glass-card problem-card highlight">
+          <div class="icon-bubble cyan">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <h3>Solusi Multivariabel NeuroNav</h3>
+          <p>
+            Mengintegrasikan ekstraksi frekuensi (DWT), fitur spasial-temporal lokal multi-skala (MSCNN), serta korelasi global <em>self-attention</em> (Vision Transformer) ke dalam 1 kesatuan model.
+          </p>
+          <div class="card-footer-stat">
+            <span class="stat-num">90% Akurasi</span>
+            <span class="stat-desc">Tertinggi dibandingkan studi terdahulu (50% - 79%)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Novelty & Architecture Pipeline Section -->
+  <section class="section bg-elevated" id="architecture">
+    <div class="container">
+      <div class="section-header text-center">
+        <div class="section-tag">Arsitektur Komputasi</div>
+        <h2 class="section-title">Integrasi Tiga Tahap: DWT + MSCNN + ViT</h2>
+        <p class="section-desc">
+          Mengatasi keterbatasan model terdahulu (yang hanya memproses sinyal mentah, ukuran kernel tunggal statis, atau arsitektur sekuensial RNN terbatas).
+        </p>
+      </div>
+
+      <div class="architecture-flow">
+        <!-- Step 1 -->
+        <div class="arch-stage-card">
+          <div class="stage-badge">Tahap 01</div>
+          <div class="stage-icon">
+            <i class="fa-solid fa-wave-square"></i>
+          </div>
+          <h3>Discrete Wavelet Transform (DWT)</h3>
+          <div class="stage-role">Dekomposisi & Filtrasi Pita Frekuensi</div>
+          <p>
+            Mengekstrak sinyal nonstasioner EEG yang rentan derau menjadi spektrum frekuensi spesifik:
+          </p>
+          <ul class="band-list">
+            <li><span class="chip chip-mu">Mu (8–13 Hz)</span> & <span class="chip chip-beta">Beta (14–30 Hz)</span>: Variabel <em>Motor Imagery</em> (Imajinasi Gerak)</li>
+            <li><span class="chip chip-alpha">Alfa (8–13 Hz)</span>, <span class="chip chip-beta">Beta</span>, & <span class="chip chip-gamma">Gamma (>30 Hz)</span>: Variabel Tingkat Fokus</li>
+          </ul>
+          <div class="ablation-pill">
+            <span class="loss-down">Dampak jika tanpa DWT: Akurasi turun 8%</span>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="arch-stage-card">
+          <div class="stage-badge">Tahap 02</div>
+          <div class="stage-icon">
+            <i class="fa-solid fa-layer-group"></i>
+          </div>
+          <h3>Multi-Scale CNN (MSCNN)</h3>
+          <div class="stage-role">Ekstraksi Fitur Spasial-Temporal Paralel</div>
+          <p>
+            Mengatasi kelemahan kernel tunggal statis dengan menjalankan 3 cabang konvolusi 2D secara paralel:
+          </p>
+          <div class="branch-visual">
+            <div class="branch-pill">Cabang 1: Conv2D (16) + Pooling</div>
+            <div class="branch-pill">Cabang 2: Conv2D (32) + Pooling</div>
+            <div class="branch-pill">Cabang 3: Conv2D (64) + Pooling</div>
+          </div>
+          <p class="branch-note">
+            Hasil ketiga cabang digabungkan melalui <strong>Concatenation</strong> membentuk matriks fitur komprehensif.
+          </p>
+          <div class="ablation-pill">
+            <span class="loss-down">Dampak jika tanpa MSCNN: Akurasi anjlok 31%</span>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="arch-stage-card">
+          <div class="stage-badge">Tahap 03</div>
+          <div class="stage-icon">
+            <i class="fa-solid fa-network-wired"></i>
+          </div>
+          <h3>Vision Transformer (ViT)</h3>
+          <div class="stage-role">Klasifikasi Global Spasial-Temporal</div>
+          <p>
+            Fitur multikanal dipetakan menjadi token citra <em>patches</em>, diberi <em>positional encoding</em>, dan diolah oleh Transformer Encoder:
+          </p>
+          <ul class="band-list">
+            <li><strong>Multi-Head Self-Attention:</strong> Menangkap keterikatan sinyal antar-elektroda kepala secara menyeluruh.</li>
+            <li><strong>Dual MLP Head:</strong> Mengeluarkan 2 klasifikasi serentak (4 Kelas Gerak + 2 Kelas Status Fokus).</li>
+          </ul>
+          <div class="ablation-pill major">
+            <span class="loss-down critical">Dampak jika tanpa ViT: Akurasi anjlok 66%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Methodology Callout -->
+      <div class="protocol-box glass-card">
+        <div class="protocol-header">
+          <i class="fa-solid fa-user-doctor"></i>
+          <div>
+            <h4>Protokol Penelitian & Supervisi Medis</h4>
+            <p>Perekaman sinyal dilakukan di Laboratorium Informatika UNJANI di bawah supervisi langsung <strong>Dr. Daswara Djajasasmita, Sp.N., M.Kes.</strong> (Neurolog) dengan persetujuan etik KEPK No: <code>M3.2607.035</code>.</p>
+          </div>
+        </div>
+        <div class="protocol-meta-tags">
+          <span><i class="fa-solid fa-users"></i> 10 Subjek Uji</span>
+          <span><i class="fa-solid fa-stopwatch"></i> Segmentasi 2 Detik</span>
+          <span><i class="fa-solid fa-database"></i> 800 Set Data</span>
+          <span><i class="fa-solid fa-shield-halved"></i> Emotiv Epoc+ 14-Ch</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Simulation Section -->
+  <section class="section" id="interactive-demo">
+    <div class="container">
+      <div class="section-header text-center">
+        <div class="section-tag">Interactive Showcase</div>
+        <h2 class="section-title">Simulator Kendali Kursi Roda NeuroNav</h2>
+        <p class="section-desc">
+          Uji skenario kendali <em>Brain-Computer Interface</em> secara interaktif. Gerakan kursi roda hanya dieksekusi jika sistem memverifikasi bahwa pengguna berada dalam kondisi <strong>Fokus</strong>!
+        </p>
+      </div>
+
+      <div class="simulator-wrapper glass-card">
+        <div class="sim-controls-panel">
+          <h3><i class="fa-solid fa-sliders"></i> Kontrol Simulasi Pikiran</h3>
+          <p class="sim-intro">Pilih bayangan perintah motorik dan status atensi fokus:</p>
+          
+          <div class="control-group">
+            <label class="group-label">1. Bayangan Gerakan (Motor Imagery):</label>
+            <div class="btn-group-directions">
+              <button class="sim-btn-dir active" data-action="MAJU">
+                <i class="fa-solid fa-arrow-up"></i>
+                <span>Maju (Forward)</span>
+              </button>
+              <div class="h-dir-row">
+                <button class="sim-btn-dir" data-action="KIRI">
+                  <i class="fa-solid fa-arrow-left"></i>
+                  <span>Kiri (Left)</span>
+                </button>
+                <button class="sim-btn-dir" data-action="DIAM">
+                  <i class="fa-solid fa-hand"></i>
+                  <span>Diam (Stop)</span>
+                </button>
+                <button class="sim-btn-dir" data-action="KANAN">
+                  <i class="fa-solid fa-arrow-right"></i>
+                  <span>Kanan (Right)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="group-label">2. Status Atensi / Gelombang Otak (Fokus):</label>
+            <div class="focus-switch-grid">
+              <button class="focus-btn active" id="btnFocusYes" data-focus="true">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Kondisi Fokus (Alfa/Beta Aktif)</span>
+              </button>
+              <button class="focus-btn" id="btnFocusNo" data-focus="false">
+                <i class="fa-solid fa-circle-xmark"></i>
+                <span>Terdistraksi / Tidak Fokus</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="sim-diagnostic-panel">
+            <div class="diag-item">
+              <span class="d-label">Keputusan BCI:</span>
+              <span class="d-val text-success" id="bciDecisionStatus">EKSEKUSI BERJALAN</span>
+            </div>
+            <div class="diag-item">
+              <span class="d-label">Waktu Inferensi:</span>
+              <span class="d-val">0.38 - 0.42 Detik</span>
+            </div>
+            <div class="diag-item">
+              <span class="d-label">Confidence Score:</span>
+              <span class="d-val" id="bciConfidence">94.2%</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-block" id="triggerSignalPulse">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Simulasikan Pancaran Sinyal EEG (2s)</span>
+          </button>
+        </div>
+
+        <div class="sim-stage-panel">
+          <div class="stage-hud">
+            <span class="hud-item"><i class="fa-solid fa-satellite-dish"></i> Status: <strong id="hudStatus">STANDBY READY</strong></span>
+            <span class="hud-item"><i class="fa-solid fa-gauge-high"></i> Kecepatan: <strong id="hudSpeed">1.2 km/h</strong></span>
+          </div>
+
+          <div class="virtual-room">
+            <!-- Simulated Navigation Grid -->
+            <div class="grid-ground"></div>
+
+            <!-- Virtual Wheelchair Avatar -->
+            <div class="wheelchair-agent" id="wheelchairAvatar">
+              <div class="user-halo" id="userHalo"></div>
+              <div class="chair-body">
+                <div class="chair-backrest"></div>
+                <div class="chair-seat">
+                  <i class="fa-solid fa-wheelchair chair-icon"></i>
+                </div>
+                <div class="wheel left"></div>
+                <div class="wheel right"></div>
+              </div>
+              <!-- Direction indicator arrow -->
+              <div class="motion-arrow" id="motionArrow">
+                <i class="fa-solid fa-chevron-up"></i>
+              </div>
+            </div>
+
+            <!-- Safety warning overlay when unfocused -->
+            <div class="unfocused-warning" id="unfocusedWarning">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span>PERINGATAN: TIDAK FOKUS! Kursi Roda Dikunci Otomatis demi Keamanan.</span>
+            </div>
+          </div>
+
+          <div class="stage-legend">
+            <span><span class="dot-legend dot-green"></span> Gerak Terverifikasi</span>
+            <span><span class="dot-legend dot-red"></span> Gating Safety Lock</span>
+            <span><span class="dot-legend dot-cyan"></span> ViT Attention Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Performance Metrics & Comparative Analysis Section -->
+  <section class="section" id="results">
+    <div class="container">
+      <div class="section-header text-center">
+        <div class="section-tag">Evaluasi & Pengujian</div>
+        <h2 class="section-title">Hasil Kinerja Klasifikasi & Uji Ablasi</h2>
+        <p class="section-desc">
+          Evaluasi berulang 10 kali menggunakan metrik Precision, Recall, F1-Score, dan pengujian pada sumber data rekaman independen serta pengujian kondisi real-time.
+        </p>
+      </div>
+
+      <!-- Two column breakdown: Ablation & Confusion Matrix Table -->
+      <div class="results-grid">
+        <!-- Ablation Table Card -->
+        <div class="glass-card stat-table-card">
+          <div class="card-title-group">
+            <i class="fa-solid fa-chart-column"></i>
+            <h3>Uji Ablasi Komponen Model</h3>
+          </div>
+          <p class="table-subtext">Membuktikan kontribusi mutlak dari setiap layer arsitektur terhadap akurasi akhir.</p>
+          
+          <div class="table-responsive">
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th>Konfigurasi</th>
+                  <th>Precision</th>
+                  <th>F1-Score</th>
+                  <th>Akurasi</th>
+                  <th>Dampak Hilang</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="row-ablation">
+                  <td>Tanpa ViT</td>
+                  <td>28%</td>
+                  <td>23%</td>
+                  <td class="text-danger font-bold">23%</td>
+                  <td><span class="badge-drop">↓ 66%</span></td>
+                </tr>
+                <tr class="row-ablation">
+                  <td>Tanpa MSCNN</td>
+                  <td>59%</td>
+                  <td>57%</td>
+                  <td class="text-warning font-bold">59%</td>
+                  <td><span class="badge-drop">↓ 31%</span></td>
+                </tr>
+                <tr class="row-ablation">
+                  <td>Tanpa DWT</td>
+                  <td>82%</td>
+                  <td>82%</td>
+                  <td class="text-info font-bold">82%</td>
+                  <td><span class="badge-drop">↓ 8%</span></td>
+                </tr>
+                <tr class="row-champion">
+                  <td><strong>DWT-MSCNN-ViT (Lengkap)</strong></td>
+                  <td><strong>90%</strong></td>
+                  <td><strong>90%</strong></td>
+                  <td class="text-success font-bold"><strong>90%</strong></td>
+                  <td><span class="badge-optimal">Model Acuan</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="insight-box">
+            <i class="fa-solid fa-circle-info"></i>
+            <span><strong>Insight Kunci:</strong> ViT memegang peranan krusial (penurunan 66% jika dicabut), membuktikan bahwa relasi spasial-temporal global melalui self-attention sangat menentukan keakuratan sinyal otak.</span>
+          </div>
+        </div>
+
+        <!-- Class Breakdown Matrix -->
+        <div class="glass-card stat-table-card">
+          <div class="card-title-group">
+            <i class="fa-solid fa-table-cells"></i>
+            <h3>Evaluasi Kombinasi 8 Kelas</h3>
+          </div>
+          <p class="table-subtext">Stabilitas performa tinggi merata di semua kombinasi 4 gerakan dan 2 status fokus.</p>
+
+          <div class="table-responsive">
+            <table class="styled-table">
+              <thead>
+                <tr>
+                  <th>Kombinasi Kelas</th>
+                  <th>Precision</th>
+                  <th>Recall</th>
+                  <th>F1-Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="class-pill focus">Fokus</span> + Maju</td>
+                  <td>90%</td>
+                  <td>91%</td>
+                  <td>91%</td>
+                </tr>
+                <tr>
+                  <td><span class="class-pill unfocus">Tidak Fokus</span> + Maju</td>
+                  <td>92%</td>
+                  <td>87%</td>
+                  <td>89%</td>
+                </tr>
+                <tr>
+                  <td><span class="class-pill focus">Fokus</span> + Kanan</td>
+                  <td>92%</td>
+                  <td>90%</td>
+                  <td>91%</td>
+                </tr>
+                <tr>
+                  <td><span class="class-pill unfocus">Tidak Fokus</span> + Kanan</td>
+                  <td>88%</td>
+                  <td>87%</td>
+                  <td>88%</td>
+                </tr>
+                <tr>
+                  <td><span class="class-pill focus">Fokus</span> + Kiri</td>
+                  <td>91%</td>
+                  <td>86%</td>
+                  <td>89%</td>
+                </tr>
+                <tr>
+                  <td><span class="class-pill unfocus">Tidak Fokus</span> + Kiri</td>
+                  <td>88%</td>
+                  <td>87%</td>
+                  <td>87%</td>
+                </tr>
+                <tr>
+                  <td><span class="class-pill focus">Fokus</span> + Diam</td>
+                  <td>89%</td>
+                  <td>89%</td>
+                  <td>89%</td>
+                </tr>
+                <tr>
+                  <td><span class="class-pill unfocus">Tidak Fokus</span> + Diam</td>
+                  <td>88%</td>
+                  <td>90%</td>
+                  <td>89%</td>
+                </tr>
+                <tr class="row-champion">
+                  <td><strong>Rata-Rata Keseluruhan</strong></td>
+                  <td><strong>90%</strong></td>
+                  <td><strong>90%</strong></td>
+                  <td><strong>90%</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="insight-box">
+            <i class="fa-solid fa-chart-line"></i>
+            <span><strong>Generalisasi Handal:</strong> Akurasi data pembanding 90%, data rekaman mandiri 87% (hanya selisih 3%), dan real-time 85% dengan latensi hanya 0.4 detik.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison with Prior Research -->
+      <div class="glass-card benchmark-card">
+        <div class="benchmark-header">
+          <div>
+            <h3>Perbandingan dengan Riset BCI Terdahulu</h3>
+            <p>Melampaui seluruh metode state-of-the-art sebelumnya baik untuk tugas tunggal maupun multivariabel.</p>
+          </div>
+        </div>
+
+        <div class="benchmark-bars">
+          <div class="bench-row">
+            <div class="bench-meta">
+              <span class="b-method">Regresi Linear (Hussain et al., 2025)</span>
+              <span class="b-task">Imajinasi Gerak & Emosi</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 33%;">33%</div>
+            </div>
+          </div>
+
+          <div class="bench-row">
+            <div class="bench-meta">
+              <span class="b-method">SVM + Regresi Linear (Haridharan et al., 2026)</span>
+              <span class="b-task">Imajinasi Gerak & Fokus (Raw EEG)</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 50%;">50%</div>
+            </div>
+          </div>
+
+          <div class="bench-row">
+            <div class="bench-meta">
+              <span class="b-method">MSCNN Standalone (Devi & Ari, 2024)</span>
+              <span class="b-task">Imajinasi Gerak Tunggal</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 73%;">73%</div>
+            </div>
+          </div>
+
+          <div class="bench-row">
+            <div class="bench-meta">
+              <span class="b-method">DWT + CNN (Ma et al., 2020)</span>
+              <span class="b-task">Imajinasi Gerak Tunggal</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 75%;">75%</div>
+            </div>
+          </div>
+
+          <div class="bench-row">
+            <div class="bench-meta">
+              <span class="b-method">Wavelet + RNN (Djamal & Putra, 2020)</span>
+              <span class="b-task">Imajinasi Gerak & Fokus</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 79%;">79%</div>
+            </div>
+          </div>
+
+          <div class="bench-row">
+            <div class="bench-meta">
+              <span class="b-method">CNN + ViT (Zhao et al., 2025)</span>
+              <span class="b-task">Imajinasi Gerak Tunggal</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width: 88%;">88%</div>
+            </div>
+          </div>
+
+          <!-- NeuroNav Winner -->
+          <div class="bench-row highlight-row">
+            <div class="bench-meta">
+              <span class="b-method bold"><i class="fa-solid fa-crown text-amber"></i> NeuroNav: DWT + MSCNN + ViT (Riset Ini)</span>
+              <span class="b-task bold">Imajinasi Gerak & Fokus Multivariabel</span>
+            </div>
+            <div class="bar-track highlight">
+              <div class="bar-fill winner" style="width: 90%;">90% (Offline) / 85% (Real-Time)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Research Deliverables / Luaran Section -->
+  <section class="section bg-elevated" id="outputs">
+    <div class="container">
+      <div class="section-header text-center">
+        <div class="section-tag">Akuntabilitas & Publikasi</div>
+        <h2 class="section-title">Luaran Wajib & Tambahan Riset PKM-RE</h2>
+        <p class="section-desc">
+          Bukti formal pengakuan hak kekayaan intelektual, publikasi jurnal terakreditasi nasional, dan sosialisasi publik.
+        </p>
+      </div>
+
+      <div class="outputs-grid">
+        <!-- Hak Cipta Card -->
+        <div class="glass-card output-card">
+          <div class="output-badge"><i class="fa-solid fa-certificate"></i> Hak Cipta Resmi</div>
+          <div class="output-icon-box">
+            <i class="fa-solid fa-award"></i>
+          </div>
+          <h3>Hak Cipta Program Komputer</h3>
+          <p class="reg-number">Nomor Pencatatan: <strong>EC002026165597</strong></p>
+          <p class="output-desc">
+            Surat Pencatatan Ciptaan resmi Kementerian Hukum dan HAM Republik Indonesia untuk perangkat lunak komputasi klasifikasi BCI multivariabel.
+          </p>
+          <div class="verified-tag">
+            <i class="fa-solid fa-shield-check"></i> Terdaftar Resmi DJKI Kemenkumham
+          </div>
+        </div>
+
+        <!-- Jurnal Card -->
+        <div class="glass-card output-card">
+          <div class="output-badge sinta"><i class="fa-solid fa-book-bookmark"></i> Jurnal Ilmiah Sinta 2</div>
+          <div class="output-icon-box">
+            <i class="fa-solid fa-newspaper"></i>
+          </div>
+          <h3>Submit Jurnal SINTA 2</h3>
+          <p class="reg-number">Jurnal Rekayasa Sistem dan Teknologi Informasi (RESTI)</p>
+          <p class="output-desc">
+            Naskah ilmiah berjudul <em>"Classification of Motor Imagery and Focus Using Multi-Scale Convolutional Neural Network and Vision Transformer"</em> telah disubmit untuk diseminasi akademis.
+          </p>
+          <div class="verified-tag">
+            <i class="fa-solid fa-check-double"></i> Terindeks Sinta 2 & Peer-Reviewed
+          </div>
+        </div>
+
+        <!-- Media Sosial Card -->
+        <div class="glass-card output-card">
+          <div class="output-badge ig"><i class="fa-brands fa-instagram"></i> Diseminasi Publik</div>
+          <div class="output-icon-box ig-icon">
+            <i class="fa-brands fa-instagram"></i>
+          </div>
+          <h3>Instagram Edukasi Riset</h3>
+          <p class="reg-number">Akun: <strong>@pkmre.neuronav</strong></p>
+          <p class="output-desc">
+            Media publikasi edukasi teknologi BCI yang menjangkau masyarakat umum dan civitas akademika dengan engagement tinggi.
+          </p>
+          <div class="ig-stats-row">
+            <div><strong>1.260+</strong> <span>Pengikut</span></div>
+            <div><strong>34.202+</strong> <span>Tayangan</span></div>
+            <div><strong>3</strong> <span>Konten Wajib</span></div>
+          </div>
+          <a href="https://www.instagram.com/pkmre.neuronav" target="_blank" rel="noopener" class="btn btn-secondary btn-sm btn-block mt-3">
+            <span>Kunjungi @pkmre.neuronav</span>
+            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Open Science & Google Drive Data Links -->
+      <div class="open-data-banner glass-card">
+        <div class="open-data-content">
+          <div class="od-icon">
+            <i class="fa-brands fa-google-drive"></i>
+          </div>
+          <div>
+            <h4>Akses Dataset Terbuka (Open Data & Replikasi)</h4>
+            <p>Dataset mentah penelitian terdahulu dan dataset perekaman eksperimen Emotiv Epoc+ 14-Kanal tersedia untuk verifikasi dan replikasi ilmiah.</p>
+          </div>
+        </div>
+        <div class="open-data-actions">
+          <a href="https://drive.google.com/drive/folders/1A7tzJUTS6hyqDtX2mE95NYW0H-ZTQ8Q4?usp=drive_link" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">
+            <i class="fa-solid fa-folder-open"></i>
+            <span>Data Pembanding</span>
+          </a>
+          <a href="https://drive.google.com/drive/folders/1hCXDr8egxo94Yq2yd9fPLCO5HR_6ByM3?usp=drive_link" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">
+            <i class="fa-solid fa-folder-open"></i>
+            <span>Data Perekaman</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Research Team Section -->
+  <section class="section" id="team">
+    <div class="container">
+      <div class="section-header text-center">
+        <div class="section-tag">Kolaborasi & Dedikasi</div>
+        <h2 class="section-title">Tim Peneliti NeuroNav</h2>
+        <p class="section-desc">
+          Program Studi Informatika, Fakultas Sains dan Informatika, Universitas Jenderal Achmad Yani (UNJANI).
+        </p>
+      </div>
+
+      <div class="team-grid">
+        <!-- Team Leader -->
+        <div class="team-card glass-card">
+          <div class="avatar-ring">
+            <div class="avatar-initials">AB</div>
+          </div>
+          <h3>Ammar Bagas Fathurrahman Wantoro</h3>
+          <span class="team-role">Ketua Peneliti / Project Lead</span>
+          <p class="team-bio">
+            Informatika UNJANI. Perancangan model deep learning DWT-MSCNN-ViT, pipeline BCI, dan eksperimen akuisisi sinyal EEG.
+          </p>
+          <div class="team-social">
+            <a href="https://github.com/fl111x" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.instagram.com/pkmre.neuronav" target="_blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+
+        <!-- Supervisor Neurologist -->
+        <div class="team-card glass-card supervisor-card">
+          <div class="avatar-ring doctor">
+            <div class="avatar-initials">DD</div>
+          </div>
+          <h3>Dr. Daswara Djajasasmita, Sp.N., M.Kes.</h3>
+          <span class="team-role">Neurolog & Supervisor Medis</span>
+          <p class="team-bio">
+            Dokter Spesialis Neurologi. Mengarahkan protokol perekaman sinyal otak EEG, validasi medis, kepatuhan etik, dan keselamatan pasien.
+          </p>
+          <div class="team-social">
+            <span class="tag-medis"><i class="fa-solid fa-notes-medical"></i> Supervisi Medis</span>
+          </div>
+        </div>
+
+        <!-- Academic Institution -->
+        <div class="team-card glass-card unjani-card">
+          <div class="avatar-ring unjani">
+            <div class="avatar-initials">UJ</div>
+          </div>
+          <h3>Fakultas Sains dan Informatika</h3>
+          <span class="team-role">Universitas Jenderal Achmad Yani</span>
+          <p class="team-bio">
+            Didukung oleh Laboratorium Informatika UNJANI, menyukseskan implementasi PKM Riset Eksakta (PKM-RE) menuju PIMNAS.
+          </p>
+          <div class="team-social">
+            <span class="tag-medis"><i class="fa-solid fa-building-columns"></i> Cimahi, Jawa Barat</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Future Potential Callout -->
+  <section class="section">
+    <div class="container">
+      <div class="cta-banner glass-card">
+        <div class="cta-content">
+          <span class="section-tag">Aplikasi Lanjutan</span>
+          <h2>Potensi Pengembangan Robotik & Neuro-Rehabilitasi</h2>
+          <p>
+            Selain diaplikasikan pada kursi roda cerdas berbantuan BCI nirkabel, model komputasi multivariabel NeuroNav berpotensi diadaptasi untuk kendali lengan prostetik robotik, wahana nirawak (drone), serta terapi pemulihan pasca-stroke.
+          </p>
+          <div class="cta-actions">
+            <a href="#interactive-demo" class="btn btn-primary">
+              <i class="fa-solid fa-play"></i> Coba Demo Simulator
+            </a>
+            <a href="https://github.com/fl111x/PKMRE-NeuroNav" target="_blank" rel="noopener" class="btn btn-secondary">
+              <i class="fa-brands fa-github"></i> Repositori GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <div class="brand-logo">
+          <div class="logo-icon small">
+            <i class="fa-solid fa-brain"></i>
+          </div>
+          <span class="brand-title">NeuroNav</span>
+        </div>
+        <p class="footer-text">
+          Penelitian PKM-RE: Model Komputasi DWT-MSCNN-ViT untuk Navigasi Kursi Roda Berbasis Sinyal EEG dan Tingkat Fokus. Hak Cipta EC002026165597.
+        </p>
+      </div>
+
+      <div class="footer-links-group">
+        <h4>Navigasi</h4>
+        <a href="#about">Latar Belakang</a>
+        <a href="#architecture">Arsitektur AI</a>
+        <a href="#interactive-demo">Simulasi BCI</a>
+        <a href="#results">Hasil Pengujian</a>
+        <a href="#outputs">Luaran & Publikasi</a>
+      </div>
+
+      <div class="footer-links-group">
+        <h4>Tautan Resmi</h4>
+        <a href="https://www.instagram.com/pkmre.neuronav" target="_blank" rel="noopener">Instagram @pkmre.neuronav</a>
+        <a href="https://github.com/fl111x/PKMRE-NeuroNav" target="_blank" rel="noopener">GitHub Repository</a>
+        <a href="https://drive.google.com/drive/folders/1hCXDr8egxo94Yq2yd9fPLCO5HR_6ByM3?usp=drive_link" target="_blank" rel="noopener">Google Drive Dataset</a>
+      </div>
+    </div>
+    
+    <div class="footer-bottom text-center">
+      <p>&copy; 2026 Tim NeuroNav (Neuro Navigation) • Universitas Jenderal Achmad Yani (UNJANI). All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

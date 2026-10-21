@@ -442,20 +442,21 @@ ul {
 }
 
 .hero-headline {
-  font-size: clamp(2.3rem, 4vw, 3.4rem);
+  font-size: clamp(1.75rem, 2.7vw, 2.45rem);
   font-weight: 800;
-  line-height: 1.18;
-  letter-spacing: -0.035em;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
   color: var(--text-heading);
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
 .hero-subheadline {
-  font-size: 1.15rem;
+  font-size: 0.98rem;
   color: var(--text-muted);
-  line-height: 1.7;
-  margin-bottom: 34px;
-  max-width: 600px;
+  line-height: 1.75;
+  margin-bottom: 30px;
+  max-width: 680px;
+  text-align: justify;
 }
 
 .hero-actions {
